@@ -54,12 +54,19 @@ export default abstract class VeinMinerUtils {
       durability.damage += blocks.length;
       container.setItem(player.selectedSlotIndex, item);
 
-      const items = new ItemStack(
-        blockTypeId.replace("lit_", ""),
-        blocks.length,
-      );
+      const items: ItemStack[] = [];
+      let amount = blocks.length;
 
-      player.dimension.spawnItem(items, blockLocation);
+      while (amount > 0) {
+        const item = new ItemStack(blockTypeId, Math.min(amount, 64));
+
+        items.push(item);
+        amount -= item.amount;
+      }
+
+      for (const item of items) {
+        player.dimension.spawnItem(item, blockLocation);
+      }
     } catch (error) {
       console.error(
         `Error while trying to vein mine blocks at ${blockLocation.x}, ${blockLocation.y}, ${blockLocation.z}`,
