@@ -73,42 +73,55 @@ export default abstract class VeinMinerUtils {
     dimension: Dimension,
     blockLocation: Vector3,
     blockTypeId: string,
-    knownBlocks: Block[] = [],
   ): Block[] {
     const blocks: Block[] = [];
-    const block = dimension.getBlock(blockLocation);
+    const queue: Vector3[] = [blockLocation];
+    const visited = new Set<string>();
+    const directions = [
+      [1, 0, 0],
+      [-1, 0, 0],
+      [0, 1, 0],
+      [0, -1, 0],
+      [0, 0, 1],
+      [0, 0, -1],
+    ] as const;
 
-    if (!block) {
-      throw new Error("Block is not rendered or is not loaded in the world.");
-    }
+    visited.add(`${blockLocation.x},${blockLocation.y},${blockLocation.z}`);
 
-    for (const sideBlock of [
-      block.above(),
-      block.below(),
-      block.north(),
-      block.south(),
-      block.east(),
-      block.west(),
-    ]) {
-      if (
-        sideBlock?.typeId.replace("lit_", "") === blockTypeId &&
-        !knownBlocks.some(
-          (entry) =>
-            entry.location.x === sideBlock.location.x &&
-            entry.location.y === sideBlock.location.y &&
-            entry.location.z === sideBlock.location.z,
-        )
-      ) {
-        knownBlocks.push(sideBlock);
-        blocks.push(
-          ...VeinMinerUtils.GetVeinBlocks(
-            dimension,
-            sideBlock.location,
-            blockTypeId,
-            knownBlocks,
-          ),
-          sideBlock,
-        );
+    for (const location of queue) {
+      for (const [dx, dy, dz] of directions) {
+        const nextLocation = {
+          x: location.x + dx,
+          y: location.y + dy,
+          z: location.z + dz,
+        };
+
+        const key = `${nextLocation.x},${nextLocation.y},${nextLocation.z}`;
+
+        if (visited.has(key)) {
+          continue;
+        }
+
+        visited.add(key);
+
+        try {
+          const block = dimension.getBlock(nextLocation);
+
+          if (!block || block.typeId.replace("lit_", "") !== blockTypeId) {
+            continue;
+          }
+
+          blocks.push(block);
+
+          if (blocks.length > VeinMinerConfig.MaxBlocks) {
+            return [];
+          }
+
+          queue.push(nextLocation);
+        } catch {
+          // Skip unloaded chunks or invalid coordinates.
+          continue;
+        }
       }
     }
 
