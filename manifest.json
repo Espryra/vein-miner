@@ -1,0 +1,25 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Vein Miner",
+    "description": "A vein miner add-on made by Espryra.",
+    "min_engine_version": [1, 26, 65],
+    "uuid": "ec698c2f-b008-429c-a370-49fbdee45c64",
+    "version": [1, 0, 0]
+  },
+  "modules": [
+    {
+      "type": "data",
+      "uuid": "a7d5cd45-a39e-4c56-8632-f2268e71e7fd",
+      "version": [1, 0, 0]
+    },
+    {
+      "type": "script",
+      "language": "javascript",
+      "uuid": "44ab84a1-8863-4d85-b7dc-821a6bea341c",
+      "entry": "scripts/Main.js",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [{ "module_name": "@minecraft/server", "version": "beta" }]
+}

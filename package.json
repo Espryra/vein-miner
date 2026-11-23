@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@minecraft/server": "^2.12.0-beta.1.26.66-stable",
+    "eslint": "^10.15.0",
+    "jiti": "^2.7.0",
+    "typescript": "^6",
+    "typescript-eslint": "^8.73.0"
+  },
+  "scripts": {
+    "watch": "bun build src/Main.ts --outfile scripts/Main.js --target bun --external \"@minecraft/*\" --minify --watch",
+    "build": "bun build src/Main.ts --outfile scripts/Main.js --target bun --external \"@minecraft/*\" --minify && mkdir pack && cp -r scripts manifest.json pack && zip -r vein-miner.mcpack pack && rm -rf pack"
+  }
+}
