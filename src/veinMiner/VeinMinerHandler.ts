@@ -25,7 +25,7 @@ export default class VeinMinerHandler {
       !item ||
       !VeinMinerConfig.Ores.includes(brokenBlock.type.id) ||
       !VeinMinerConfig.Tools.includes(item.typeId) ||
-      (!player.isSneaking && VeinMinerConfig.ActivateOnSneak)
+      player.isSneaking !== VeinMinerConfig.ActivateOnSneak
     ) {
       return;
     }
