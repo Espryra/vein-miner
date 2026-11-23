@@ -23,7 +23,7 @@ export default class VeinMinerHandler {
 
     if (
       !item ||
-      !VeinMinerConfig.Ores.includes(brokenBlock.type.id) ||
+      !VeinMinerConfig.Ores.includes(brokenBlock.type.id.replace("lit_", "")) ||
       !VeinMinerConfig.Tools.includes(item.typeId) ||
       player.isSneaking !== VeinMinerConfig.ActivateOnSneak
     ) {
@@ -46,7 +46,7 @@ export default class VeinMinerHandler {
       player,
       item,
       block.location,
-      brokenBlock.type.id,
+      brokenBlock.type.id.replace("lit_", ""),
     );
   }
 }
